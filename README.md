@@ -20,10 +20,115 @@ In this project I have:
 - Interpreted the limitations of using probabilistic distributions (e.g., binomial) for real-world game reviews
 
 ---
-## 🕷️Extraction of Steam User Reviews Through Scraping
+## 🕷️Steam Review Scraper & Cleaning Pipeline
 
-First, we extract the data set using Python's BeautifulSoup libary on Steams Website.
+First, we scrape top-rated Steam user reviews using BeautifulSoup and save the raw data as `raw_reviews.csv`. Then, we clean the review text using a regular expression to remove date prefixes and save the result as `reviews_cleaned.csv`.
 
 ```python
+import requests
+from bs4 import BeautifulSoup
+import pandas as pd
+import re
+
+# Part 1: Web Scraping
+
+# Replace with a valid Steam App ID
+APP_ID = "<APP_ID>"  # <-- Replace this before running
+url = f"https://steamcommunity.com/app/{APP_ID}/reviews/?browsefilter=toprated"
+
+headers = {
+    "User-Agent": (
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+        "AppleWebKit/537.36 (KHTML, like Gecko) "
+        "Chrome/120.0.0.0 Safari/537.36"
+    ),
+    "Accept-Language": "en-US,en;q=0.9"
+}
+
+# Send GET request to the review page
+response = requests.get(url, headers=headers)
+soup = BeautifulSoup(response.text, "html.parser")
+
+# Extract reviews from HTML
+review_cards = soup.find_all("div", class_="apphub_UserReviewCardContent")
+reviews = []
+
+for card in review_cards:
+    title_div = card.find_previous("div", class_="title")
+    recommend = title_div.get_text(strip=True) if title_div else "Unknown"
+
+    hours_div = card.find_previous("div", class_="hours")
+    hours_played = hours_div.get_text(strip=True) if hours_div else "Unknown"
+
+    content_div = card.find("div", class_="apphub_CardTextContent")
+    content = content_div.get_text(separator=" ", strip=True) if content_div else "No Content"
+
+    date_div = card.find("div", class_="date_posted")
+    date_posted = date_div.get_text(strip=True) if date_div else "Unknown"
+
+    author_div = card.find_next("div", class_="apphub_CardContentAuthorName")
+    user_name = author_div.get_text(strip=True) if author_div else "Anonymous"
+
+    reviews.append({
+        "user_name": user_name,
+        "recommend": recommend,
+        "hours": hours_played,
+        "date": date_posted,
+        "review": content
+    })
+
+# Convert to DataFrame
+df_raw = pd.DataFrame(reviews)
+
+# Save raw data
+raw_file_path = "raw_reviews.csv"
+try:
+    with open(raw_file_path, 'x', encoding="utf-8-sig") as f:
+        df_raw.to_csv(f, index=False)
+    print(f"First-time write: saved to {raw_file_path}")
+except FileExistsError:
+    df_raw.to_csv(raw_file_path, mode='a', header=False, index=False)
+    print(f"File exists: data appended to {raw_file_path}")
+
+print("Raw Data Preview:")
+print(df_raw.head())
+
+#Part 2: Cleaning Review Text
+
+df_cleaned = df_raw.copy()
+
+# Remove "Posted: Month Day" from the start of the review (e.g., "Posted: March 22")
+df_cleaned["review"] = df_cleaned["review"].str.replace(
+    r"^Posted:\s*[A-Za-z]+\s+\d{1,2}\s*", 
+    "", 
+    regex=True
+)
+
+# Save cleaned data
+cleaned_file_path = "reviews_cleaned.csv"
+df_cleaned.to_csv(cleaned_file_path, index=False, encoding="utf-8-sig")
+print(f"Cleaned data saved to {cleaned_file_path}")
+
+print("Cleaned Review Preview:")
+print(df_cleaned["review"].head(5))
+
+
+```
+The raw data set is saved under `raw_reviews.csv` and the cleaned data set is saved under `reviews_cleaned.csv`
+
+<mark>⚠️Due  to legal and ethical reasons, the raw Steam review data will not be included in this project. </br>
+The following is an example illustrating the structure and format of the `reviews_cleaned.csv` dataset used in this analysis </mark>
+
+
+| user_name    | recommend       | hours               | date              | review                                                                 |
+|--------------|------------------|----------------------|-------------------|--------------------------------------------------------------------------------|
+| DragonSlayer | Recommended      | 102.5 hrs on record  | Posted: April 10  | One of the best co-op experiences I've had in years...                         |
+| CoffeeAddict | Not Recommended  | 5.2 hrs on record    | Posted: March 3   | Game crashes every 10 minutes on my laptop...                                  |
+| PixelWizard  | Recommended      | 210.0 hrs on record  | Posted: May 17    | A true hidden gem. The pixel art is beautiful...                               |
+| AFK_Ninja    | Mixed            | 47.3 hrs on record   | Posted: June 1    | Great mechanics, but the matchmaking is trash...                               |
+| GlitchHunter | Not Recommended  | 13.7 hrs on record   | Posted: May 29    | This game has potential, but it’s buried under bugs and UI issues...          |
+
+(see full data frame in `reviews_cleaned.csv`)
+
 
 
