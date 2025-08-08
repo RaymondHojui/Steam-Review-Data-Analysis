@@ -1,5 +1,7 @@
-# 🎮Projrct: Steam Review Data Analysis
+# 🎮Project: Steam Review Data Analysis
 **Summary**
+
+This project applies web scraping, LLM tagging, and statistical modeling to analyze top Steam reviews of a specific game. It demonstrates how data science can help game companies uncover sentiment trends, identify player pain points, and guide product improvements using real user feedback.
 
 Software and Tools:
 
