@@ -114,9 +114,9 @@ print(df_cleaned["review"].head(5))
 
 
 ```
-The raw data set is saved under `raw_reviews.csv` and the cleaned data set is saved under `reviews_cleaned.csv`
+The **raw data** set is saved under `raw_reviews.csv` and the **cleaned data** set is saved under `reviews_cleaned.csv`
 
-<mark>⚠️Due  to legal and ethical reasons, the raw Steam review data will not be included in this project. </br>
+<mark>⚠️Due  to legal and ethical reasons, the real Steam review data that had been extracted will not be included in this project. </br>
 The following is an example illustrating the structure and format of the `reviews_cleaned.csv` dataset used in this analysis </mark>
 
 
