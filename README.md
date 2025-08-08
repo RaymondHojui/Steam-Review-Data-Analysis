@@ -1,4 +1,4 @@
-# 🎮Projrct: Game_comment_Data_analysis_project
+# 🎮Projrct: Steam Review Data Analysis
 **Summary**
 
 Software and Tools:
