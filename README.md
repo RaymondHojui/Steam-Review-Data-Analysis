@@ -19,15 +19,6 @@ Software and Tools:
 
 - **CSV** for data storage and versioning
 
-In this project I have:
-
-- Collected real user reviews from Steam using web scraping **and** cleaned/preprocessed the review data
-
-- Used a local LLM (DeepSeek) to auto-generate multi-label tags for each review
-
-- Built conceptual foundations for logistic regression and binomial modeling based on user sentiment distribution
-
-- Interpreted the limitations of using probabilistic distributions (e.g., binomial) for real-world game reviews
 
 ---
 ## 🕷️Steam Review Scraper & Cleaning Pipeline
