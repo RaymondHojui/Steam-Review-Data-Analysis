@@ -1,7 +1,17 @@
 # 🎮Project: Steam Review Data Analysis
 **Summary**
 
-This project applies web scraping, LLM tagging, and statistical modeling to analyze top Steam reviews of a specific game. It demonstrates how data science can help game companies uncover sentiment trends, identify player pain points, and guide product improvements using real user feedback.
+This project simulates a real-world data analysis workflow in the gaming industry.  
+Using web scraping and large language models (LLMs), I analyze top Steam user reviews to identify sentiment patterns and player concerns.  
+By applying statistical models such as binomial regression, the project explores how user feedback relates to playtime and recommendation behavior, offering insight that can guide future game design decisions.
+
+Objectives
+
+- Extract real user reviews from Steam via web scraping  
+- Clean and preprocess unstructured review text  
+- Use a local LLM to auto-tag sentiment and themes  
+- Explore probabilistic modeling (e.g., binomial regression) on user feedback  
+- Identify pain points and improvement opportunities for game design
 
 Software and Tools:
 
