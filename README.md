@@ -19,4 +19,11 @@ In this project I have:
 
 - Interpreted the limitations of using probabilistic distributions (e.g., binomial) for real-world game reviews
 
+---
+## 🕷️Extraction of Steam User Reviews Through Scraping
+
+First, we extract the data set using Python's BeautifulSoup libary on Steams Website.
+
+```python
+
 
