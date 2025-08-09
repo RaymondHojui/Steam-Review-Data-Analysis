@@ -1,24 +1,41 @@
 # 🎮Project: Steam Review Data Analysis
+
 **Summary**
 
-This project simulates a real-world data analysis workflow in the gaming industry. By applying data science, the project explores how user feedback relates to recommendation behavior, offering insight that can guide future game design decisions.
+This project simulates a real-world data analysis workflow in the gaming industry. Using AI-powered large language model (LLM) tagging and statistical modeling, the project explores how user feedback relates to recommendation behavior, offering insight that can guide future game design decisions.
 
-Objectives
-
+**Objectives**
 - Extract real user reviews from Steam via web scraping  
 - Clean and preprocess unstructured review text  
 - Use a local LLM to auto-tag sentiment and themes  
 - Explore probabilistic modeling (e.g., binomial regression) on user feedback  
 - Identify pain points and improvement opportunities for game design
 
-Software and Tools:
+**Software and Tools:**
 
 - **Python** (Pandas, BeautifulSoup, Counter, Matplotlib)
 
-- **LLM** (DeepSeek) for auto-tagging unstructured text
+- **LLM** (DeepSeek) AI used for auto-tagging unstructured text
 
 - **CSV** for data storage and versioning
 
+**Database Schema**
+
+- **Raw Data**  
+  Source: Scraped directly from Steam reviews.  
+  Fields: `user_name`, `recommend`, `hours`, `date`, `review`  
+  Purpose: Preserve the original structure and metadata for reference.
+
+- **Cleaned Data**  
+  Source: Raw Data after text preprocessing.  
+  Changes: Removed date prefixes in review text and standardized formats.  
+  Fields: `user_name`, `recommend`, `hours`, `date`, `review`  
+  Purpose: Prepare consistent input for LLM tagging.
+
+- **Final Data**  
+  Source: Cleaned Data with additional sentiment/theme labels.  
+  Fields: `user_name`, `recommend`, `hours`, `date`, `review`, `llm_labels`  
+  Purpose: Purpose: This is the final dataset used for statistical modeling. It contains both the cleaned reviews and AI-generated sentiment/theme labels (via a large language model, LLM).
 
 ---
 ## 🕷️Steam Review Scraper & Cleaning Pipeline
