@@ -1,5 +1,9 @@
 # 🎮Project: Steam Review Data Analysis
 
+**Hypothesis** 
+
+By fixing and controlling qualities a huge population of players dislike, the recommend rate of the game will significantly improve.
+
 **Summary**
 
 This project simulates a real-world data analysis workflow in the gaming industry. Using AI-powered large language model (LLM) tagging and statistical modeling, the project explores how user feedback relates to recommendation behavior, offering insight that can guide future game design decisions.
@@ -41,6 +45,16 @@ This project simulates a real-world data analysis workflow in the gaming industr
 ## 🕷️Steam Review Scraper & Cleaning Pipeline
 
 First, we scrape top-rated Steam user reviews using BeautifulSoup and save the raw data as `raw_reviews.csv`. Then, we clean the review text using a regular expression to remove date prefixes and save the result as `reviews_cleaned.csv`.
+
+**Why this step**
+
+We collect a reproducible sample of Steam reviews and convert the text and metadata (playtime, recommendation, etc.) into structured features for future tagging and modeling.
+
+**Why start with “Top-Rated / Most Helpful”**
+
+We collect data based on top-rated reviews for an initial signal on what delighted/annoyed players most. Starting with top-rated (“Most Helpful”) reviews maximizes the signal-to-noise ratio (SNR): high upvotes signal wider agreement, so these comments carry higher signal and product relevance in other words **these comments are broadly agreed, making them most actionable**
+
+**Code:**
 
 ```python
 import requests
@@ -147,6 +161,9 @@ The following is an example illustrating the structure and format of the `review
 | GlitchHunter | Not Recommended  | 13.7 hrs on record   | Posted: May 29    | This game has potential, but it’s buried under bugs and UI issues...          |
 
 (see full data frame in `reviews_cleaned.csv`)
+
+---
+
 
 
 
