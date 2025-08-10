@@ -149,7 +149,7 @@ print(df_cleaned["review"].head(5))
 The **raw data** set is saved under `raw_reviews.csv` and the **cleaned data** set is saved under `reviews_cleaned.csv`
 
 <mark>⚠️Due  to legal and ethical reasons, the real Steam review data that had been extracted will not be included in this project. </br>
-The following is an example illustrating the structure and format of the `reviews_cleaned.csv` dataset used in this analysis </mark>
+The following is an example illustrating the structure and format of the `reviews_cleaned.csv` dataset used in this analysis for demonstration purposes; it does not contain real user data. </mark>
 
 
 | user_name    | recommend       | hours               | date              | review                                                                 |
@@ -162,8 +162,14 @@ The following is an example illustrating the structure and format of the `review
 
 (see full data frame in `reviews_cleaned.csv`)
 
+Now we have cleaned sorted data that is ready to be tagged by an llm!
+
 ---
+## 🤖 Auto tagging with Local LLM
+Next, we will run a local LLM over the `review` field (column) for each record (row) and assign 1–5 specific labels summarizing the content. Labels are stored as a list in a new CSV field named`llm_lable`
 
+**Why this step**
 
+Tagging unstructured review text into analyzable categories makes it possible for us to quantify recurring themes in player feedback. To do this at scale and with quick turnaround, we automate the tagging with an AI LLM since manual tagging is time-consuming and costly. Running this model locally preserves data privacy where no content is sent to third-party services.
 
 
