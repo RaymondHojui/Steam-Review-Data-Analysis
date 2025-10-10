@@ -51,7 +51,7 @@ We collect a reproducible sample of Steam reviews and convert the text and metad
 
 **Why start with “Top-Rated / Most Helpful”**
 
-We collect data based on top-rated reviews for an initial signal on what delighted/annoyed players most. Starting with top-rated (“Most Helpful”) reviews maximizes the signal-to-noise ratio (SNR): high upvotes signal wider agreement, so these comments carry higher signal and product relevance in other words **these comments are broadly agreed, making them most actionable**
+We collect data based on top-rated reviews for an initial signal on what delighted/annoyed players most. Starting with top-rated (“Most Helpful”) reviews maximizes the signal-to-noise ratio (SNR): high upvotes signal wider agreement, so these comments carry higher signal and product relevance. In other words **these comments are broadly agreed, making them most actionable**
 
 **Code:**
 
@@ -147,7 +147,7 @@ print(df_cleaned["review"].head(5))
 ```
 The **raw data** set is saved under `raw_reviews.csv` and the **cleaned data** set is saved under `reviews_cleaned.csv`
 
-<mark>⚠️Due  to legal and ethical reasons, the real Steam review data that had been extracted will not be included in this project. </br>
+<mark>⚠️Due  to legal and ethical reasons, the real Steam review data that I have extracted will not be included in this project. </br>
 The following is an example illustrating the structure and format of the `reviews_cleaned.csv` dataset used in this analysis for demonstration purposes; it does not contain real user data. </mark>
 
 
@@ -210,7 +210,7 @@ It should look something like this:
 
 | user_name    | recommend       | hours               | date             | review                                                               | llm_labels                              |
 | ------------ | --------------- | ------------------- | ---------------- | -------------------------------------------------------------------- | --------------------------------------- |
-| DragonSlayer | Recommended     | 102.5 hrs on record | Posted: April 10 | One of the best co-op experiences I've had in years...               | ["co-op", "experience", "fun"]          |
+| DragonSlayer | Recommended     | 102.5 hrs on record | Posted: April 10 | One of the best UI I've seen in years...                             | ["user interface", "positive"]          |
 | CoffeeAddict | Not Recommended | 5.2 hrs on record   | Posted: March 3  | Game crashes every 10 minutes on my laptop...                        | ["crash", "stability", "performance"]   |
 | PixelWizard  | Recommended     | 210.0 hrs on record | Posted: May 17   | A true hidden gem. The pixel art is beautiful...                     | ["art", "aesthetics", "positive", "pixle art"]       |
 | AFK_Ninja    | Recommend       | 47.3 hrs on record  | Posted: June 1   | Great mechanics, but the matchmaking is trash...                     | ["matchmaking", "multiplayer", "mechanics"] |
@@ -224,9 +224,9 @@ It should look something like this:
 There are 2 major issues with the leabels at this stage
 
 **Problem 1:**
-We are getting identical tags which are generated as different tags but share the same meaning (eg. user interface vs.UI) This occurs because the LLM does not contain memories from the previous review and does the commenting as individual tasks. However, there is a recognizable pattern for the tags. Tags are generally 1-2 word long, and similar words will keep repeating. The easiest way of fixing this problem is to manually change every word with the same meaning to one specific word.
+Different labels are being generated for the same concept (eg. user interface vs.UI) This occurs because the LLM does not retain memories across reviews and treat each comment as individual tasks. However, there is a recognizable pattern for the tags. Tags are generally 1-2 word long, and similar words will keep repeating. The easiest way of fixing this problem is to manually change every word with the same meaning to one specific word.
 
-We’re getting semantically identical tags generated as different strings (e.g., “user interface” and “UI”). This occurs because the LLM reviews are stateless and don’t remember previous tag decisions. Since tags are usually 1–2 words and repeat across items, the simplest fix is to normalize them: create a synonym map and replace all variants with one canonical tag.
+We’re getting semantically identical tags generated as different strings (e.g., “user interface” and “UI”). This occurs because the LLM reviews are stateless and don’t remember previous tag decisions. Since tags are usually 1–2 words, similar terms keep recurring. The fix is to normalize synonyms to a single canonical tag.
 
 ```python
 
@@ -236,8 +236,10 @@ The main limitation of this strategy is that, in extrme cases, some synonyms may
 **Problem 2:**
 Although most labels generated are accurate, there may still be instances of inaccurate or low-quality labeling. This can occur because the LLM may have difficulty recognizing sarcasm or indirect comments. For example, a comment such as "I love how the enemies know where I am before I spawn" is referring to unfair detection, but the LLM might incorrectly label it as "Smart AI"
 
-To invsetigate in the accuracy of LLM label, we can use simple random sampling to estimate a population proportion of correctness of LLM tagging.The simplist way of doing this is to randomly select 15% of the labled comments and mannually check if they are lablled correctly or incorrectly. Hence, we may use the following code to pick 15 random comments (since our sample size is 100) and check the correctness of AI lableing.
-
-
+To invsetigate in the accuracy of LLM label, we can use simple random sampling to estimate a population proportion of correctness of LLM tagging. The way we use to do this is to randomly select 15% of the labled comments and mannually check if they are lablled correctly or incorrectly. Hence, we may use the following code to pick 15 random comments (since our sample size is 100) and check the correctness of AI lableing.
 
 ---
+# 📊 A Random Dataset
+As mentionted before, we are currently working with "Top-Rated / Most Helpful" comments because these comments are broadly agreed; however, they are **not a probability sample** and suffer from exposure/visibility bias. To make our prediction and analysis more accurate, we will now augment our current dataset with a small random sample and apply propensity score weighting adjustments to generalize results to the full player population.
+
+The first step is to collect a clean llm-labled **random** dataset by employing similar steps of what we did before for the "Most Useful dataset." The only difference is that we now have to change our code for data scraping so we can collect a purely random dataset.
