@@ -1,8 +1,8 @@
 # 🎮Project: Steam Review Data Analysis
 
-**Hypothesis** 
+**Project Goal** 
 
-By fixing and controlling qualities that huge population of players dislikes, the recommend rate of the game will significantly improve.
+Use player feedback data to identify the game qualities that most negatively influence recommendations and build a model that predicts how addressing these issues will increase the game's recommend rate.
 
 **Summary**
 
