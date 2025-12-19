@@ -223,25 +223,29 @@ It should look something like this:
 
 **Issues About LLM lables & How to Fix It**
 
-There are 2 major issues with the leabels at this stage
+There are 2 major issues with the leabels at this stage:
 
 **Problem 1:**
-Different labels are being generated for the same concept (eg. user interface vs.UI) This occurs because the LLM does not retain memories across reviews and treat each comment as individual tasks. However, there is a recognizable pattern for the tags. Tags are generally 1-2 word long, and similar words will keep repeating. The easiest way of fixing this problem is to manually change every word with the same meaning to one specific word.
-
-We’re getting semantically identical tags generated as different strings (e.g., “user interface” and “UI”). This occurs because the LLM reviews are stateless and don’t remember previous tag decisions. Since tags are usually 1–2 words, similar terms keep recurring. The fix is to normalize synonyms to a single canonical tag.
+Different labels are being generated for the same concept (e.g., “user interface” and “UI”). This occurs because the LLM reviews are stateless and don’t remember previous tag decisions. However, there is a recognizable pattern for the tags. Tags are generally 1-2 word long, and similar words will keep repeating. A simple fix is to normalize synonyms to a single canonical tag.
 
 ```python
 
 ```
-The main limitation of this strategy is that, in extrme cases, some synonyms may be missed. For example, we might classify “user interface,” “UI,” “UI design,” “visual design” .etc under the tag UI, but did not capture “interface,” which should also classified as UI. That said, this is likely negligible because most synonyms are correctly captured, and only a small number are missed, so the overall results are largely unaffected.
+A limitation of this strategy is that, in extrme cases, some synonyms may be missed. For example, we might classify “user interface,” “UI,” “UI design,” “visual design” .etc under the tag "UI", but missed the tage “interface,” which should also classified as UI. That said, this is likely negligible because most synonyms are correctly captured, and only a small number are missed, so the overall results are largely unaffected.
 
 **Problem 2:**
 Although most labels generated are accurate, there may still be instances of inaccurate or low-quality labeling. This can occur because the LLM may have difficulty recognizing sarcasm or indirect comments. For example, a comment such as "I love how the enemies know where I am before I spawn" is referring to unfair detection, but the LLM might incorrectly label it as "Smart AI"
 
-To invsetigate in the accuracy of LLM label, we can use simple random sampling to estimate a population proportion of correctness of LLM tagging. The way we use to do this is to randomly select 15% of the labled comments and mannually check if they are lablled correctly or incorrectly. Hence, we may use the following code to pick 15 random comments (since our sample size is 100) and check the correctness of AI lableing.
+To invsetigate in the accuracy of LLM label, we can use simple random sampling to estimate a population proportion of correctness of LLM tagging. The way we do this is to randomly select 15% of the labled comments and mannually check if they are lablled correctly or incorrectly. Hence, we may use the following code to pick 15 random comments (since our sample size is 100) and check the correctness of AI lableing.
+
+
 
 ---
 # 📊 A Random Dataset
 As mentionted before, we are currently working with "Top-Rated / Most Helpful" comments because these comments are broadly agreed; however, they are **not a probability sample** and suffer from exposure/visibility bias. To make our prediction and analysis more accurate, we will now augment our current dataset with a small random sample and apply propensity score weighting adjustments to generalize results to the full player population.
 
 The first step is to collect a clean llm-labled **random** dataset by employing similar steps of what we did before for the "Most Useful dataset." The only difference is that we now have to change our code for data scraping so we can collect a purely random dataset.
+
+---
+# 🔎 Figuring Key Qualities
+Now that we finally have a high-quality dataset, it's time to investigate the factors that influence a player's decision to recommend the game.
