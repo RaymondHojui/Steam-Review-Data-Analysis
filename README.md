@@ -67,8 +67,7 @@ import re
 APP_ID = "<APP_ID>"  # <-- Replace this before running
 url = f"https://steamcommunity.com/app/{APP_ID}/reviews/?browsefilter=toprated"
 
-headers = {
-    "User-Agent": (
+headers = {"User-Agent": (
         "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
         "AppleWebKit/537.36 (KHTML, like Gecko) "
         "Chrome/120.0.0.0 Safari/537.36"
@@ -167,9 +166,12 @@ Now we have cleaned sorted data that is ready to be tagged by an llm!
 ## 🤖 Auto tagging with Local LLM
 Next, we will run a local LLM over the `review` field (column) for each record (row) and assign 1–5 specific labels summarizing the content. Labels are stored as a list in a new CSV field named`llm_lable`
 
+**Preparation and Getting Ready**
+This project runs the `deepseek-r1:14b` LLM locally using the open-source tool `ollama`. While we could use other models or host the LLM via external APIs, we chose `deepseek-r1:14b` because it is open-source, and we run it locally to preserve data privacy (no content ran locally is sent to third-party services). Specific steps to find how to use ollama can be accessed here [].
+
 **Why this step**
 
-Tagging unstructured review text into analyzable categories makes it possible for us to quantify recurring themes in player feedback. To do this at scale and with quick turnaround, we automate the tagging with an AI LLM since manual tagging is time-consuming and costly. Running this model locally preserves data privacy where no content is sent to third-party services.
+Tagging unstructured review text into analyzable categories makes it possible for us to quantify recurring themes in player feedback. To do this at scale and with quick turnaround, we automate the tagging with an AI LLM since manual tagging is time consuming and costly in real world senarios. Running this model locally preserves data privacy where no content is sent to third-party services.
 
 **Code:**
 ```python
