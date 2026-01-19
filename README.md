@@ -238,14 +238,68 @@ Although most labels generated are accurate, there may still be instances of ina
 
 To invsetigate in the accuracy of LLM label, we can use simple random sampling to estimate a population proportion of correctness of LLM tagging. The way we do this is to randomly select 15% of the labled comments and mannually check if they are lablled correctly or incorrectly. Hence, we may use the following code to pick 15 random comments (since our sample size is 100) and check the correctness of AI lableing.
 
-
-
----
-# 📊 A Random Dataset
-As mentionted before, we are currently working with "Top-Rated / Most Helpful" comments because these comments are broadly agreed; however, they are **not a probability sample** and suffer from exposure/visibility bias. To make our prediction and analysis more accurate, we will now augment our current dataset with a small random sample and apply propensity score weighting adjustments to generalize results to the full player population.
-
-The first step is to collect a clean llm-labled **random** dataset by employing similar steps of what we did before for the "Most Useful dataset." The only difference is that we now have to change our code for data scraping so we can collect a purely random dataset.
-
 ---
 # 🔎 Figuring Key Qualities
-Now that we finally have a high-quality dataset, it's time to investigate the factors that influence a player's decision to recommend the game.
+Now that we finally have each review converted into structured tags, it's time to investigate which factors most strongly reduces the likelihood that a player recommends the game.
+
+## Logistic (Binomial) Regression
+
+Player recommendations on Steam are inherently binary:
+
+`Recommended`
+
+`Not Recommended`
+
+This makes **logistic regression** a great modeling choice. (Logistic regression can estimate the probability that a review is `Not Recommended` based on the presence of specific issue tags)
+
+**Step 1 — Convert tags into model features**
+
+Each review becomes a row of binary features:
+
+If a review contains tag `crash` → crash = 1, otherwise 0
+
+Same for "bug", "performance", "ui", "matchmaking", etc.
+
+Target (what we predict):
+
+Not Recommended = 1
+
+Recommended = 0
+
+`Step 2 — Baseline insight (simple frequency check)`
+
+We first compare how often each tag appears in negative vs non-negative reviews.
+
+Deliverable:
+
+A bar chart: tag frequency in Not Recommended vs Others
+
+** Step 3 — Logistic regression (interpretable model)**
+
+We fit a logistic regression using the tag features to estimate:
+
+Which tags are most associated with Not Recommended
+
+How strong each tag’s influence is (via odds ratios)
+
+Deliverable:
+
+Ranked table of top negative drivers like:
+
+** Step 4 — “What if we fix X?” simulation (optional but very strong)**
+
+Once we have a model, we can simulate improvement:
+
+Remove an issue tag (e.g., crash=0)
+
+Recompute predicted negative rate
+
+Estimate recommend-rate improvement
+
+Deliverable:
+
+A small “impact estimate” table:
+
+Fix	predicted Not Recommended ↓
+Fix crashes	-8%
+Improve performance	-5%
