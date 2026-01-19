@@ -1,4 +1,4 @@
-# 🎮Project: Steam Review Data Analysis
+# Project: Steam Review Data Analysis
 
 **Project Goal** 
 
