@@ -242,11 +242,24 @@ To invsetigate in the accuracy of LLM label, we can use simple random sampling t
 # 🔎 Figuring Key Qualities
 Now that we finally have each review converted into structured tags, it's time to investigate which factors most strongly reduces the likelihood that a player recommends the game.
 
-## Logistic (Binomial) Regression
+We will perform a Logistic (Binomial) Regression for this project.
 
 Why Logistic (Binomial) Regression: Player recommendations on Steam are inherently binary: `Recommended` or `Not Recommended`. This makes **logistic regression** a great modeling choice. (Logistic regression can estimate the probability that a review is `Not Recommended` based on the presence of specific issue tags)
 
-**Step 1 — Convert tags into model features**
+**Step 1 — Baseline insight (simple frequency check)**
+
+To [xxx] we first compare how often each tag appears in negative vs non-negative reviews.
+
+Deliverable:
+
+A bar chart: tag frequency in Not Recommended vs Others
+
+**Code:**
+```python
+```
+
+**Step 2 — Convert tags into model features**
+Now we have some insights anout the frequency of each tag, we may start forming our Logistic (Binomial) Regression model.
 
 Each review becomes a row of binary features:
 
@@ -260,13 +273,9 @@ Not Recommended = 1
 
 Recommended = 0
 
-**Step 2 — Baseline insight (simple frequency check)**
-
-We first compare how often each tag appears in negative vs non-negative reviews.
-
-Deliverable:
-
-A bar chart: tag frequency in Not Recommended vs Others
+**Code:**
+```python
+```
 
 **Step 3 — Logistic regression (interpretable model)**
 
