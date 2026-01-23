@@ -244,13 +244,7 @@ Now that we finally have each review converted into structured tags, it's time t
 
 ## Logistic (Binomial) Regression
 
-Player recommendations on Steam are inherently binary:
-
-`Recommended`
-
-`Not Recommended`
-
-This makes **logistic regression** a great modeling choice. (Logistic regression can estimate the probability that a review is `Not Recommended` based on the presence of specific issue tags)
+Why Logistic (Binomial) Regression: Player recommendations on Steam are inherently binary: `Recommended` or `Not Recommended`. This makes **logistic regression** a great modeling choice. (Logistic regression can estimate the probability that a review is `Not Recommended` based on the presence of specific issue tags)
 
 **Step 1 — Convert tags into model features**
 
@@ -266,7 +260,7 @@ Not Recommended = 1
 
 Recommended = 0
 
-`Step 2 — Baseline insight (simple frequency check)`
+**Step 2 — Baseline insight (simple frequency check)**
 
 We first compare how often each tag appears in negative vs non-negative reviews.
 
@@ -274,7 +268,7 @@ Deliverable:
 
 A bar chart: tag frequency in Not Recommended vs Others
 
-** Step 3 — Logistic regression (interpretable model)**
+**Step 3 — Logistic regression (interpretable model)**
 
 We fit a logistic regression using the tag features to estimate:
 
@@ -286,7 +280,7 @@ Deliverable:
 
 Ranked table of top negative drivers like:
 
-** Step 4 — “What if we fix X?” simulation (optional but very strong)**
+**Step 4 — “What if we fix X?” simulation (optional but very strong)**
 
 Once we have a model, we can simulate improvement:
 
