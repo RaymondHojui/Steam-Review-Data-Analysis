@@ -1,4 +1,4 @@
-# Project: Steam Review Data Analysis
+# Project: LLM Based Tagging and Analysis of Steam User Review Data
 
 **Project Goal** 
 
