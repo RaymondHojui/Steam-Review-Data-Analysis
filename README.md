@@ -228,7 +228,50 @@ There are 2 major issues with the leabels at this stage:
 Different labels are being generated for the same concept (e.g., “user interface” and “UI”). This occurs because the LLM reviews are stateless and don’t remember previous tag decisions. However, there is a recognizable pattern for the tags. Tags are generally 1-2 word long, and similar words will keep repeating. A simple fix is to normalize synonyms to a single canonical tag.
 
 ```python
+import pandas as pd
+import ast
 
+df = pd.read_csv("data/utf_final_result.csv")
+
+label_mapping = {
+    "multiplayer experience": "multiplayer",
+    "multiplayer mode": "multiplayer",
+    "co-op": "multiplayer",
+    "coop": "multiplayer",
+    "bugs": "bug",
+    "optimization": "performance",
+    "crash": "bug",
+    "crashes": "bug",
+    "fps": "performance",
+    "frame rate": "performance",
+    "online": "multiplayer",
+    "price": "monetization",
+    "cost": "monetization",
+    "disapointment": "complaints",
+    "challenge": "difficulty",
+    "negativity": "complains",
+    "visual": "graphics",
+    "visuals": "graphics",
+    "user interface": "ui",
+    "balance": "difficulty",
+}
+
+def normalize_tag(tag):
+    tag = tag.lower().strip()
+    return label_mapping.get(tag, tag)
+
+all_tags = []
+for cell in df["llm_labels"]:
+    if pd.isna(cell):
+        continue
+    try:
+        tag_list = ast.literal_eval(cell)
+    except:
+        continue
+    if isinstance(tag_list, str):
+        tag_list = [tag_list]
+    for t in tag_list:
+        all_tags.append(normalize_tag(t))
 ```
 A limitation of this strategy is that, in extrme cases, some synonyms may be missed. For example, we might classify “user interface,” “UI,” “UI design,” “visual design” .etc under the tag "UI", but missed the tage “interface,” which should also classified as UI. That said, this is likely negligible because most synonyms are correctly captured, and only a small number are missed, so the overall results are largely unaffected.
 
