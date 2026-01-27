@@ -1,5 +1,4 @@
-# Project: LLM Based Tagging and Analysis of Steam User Review Data
-
+# Predicting Recommend-Rate Lift from LLM-Tagged Steam Reviews
 **Project Goal** 
 
 Use player feedback data to identify the game qualities that most negatively influence recommendations and build a model that predicts how addressing these issues will increase the game's recommend rate.
