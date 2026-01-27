@@ -281,6 +281,35 @@ Although most labels generated are accurate, there may still be instances of ina
 To invsetigate in the accuracy of LLM label, we can use simple random sampling to estimate a population proportion of correctness of LLM tagging. The way we do this is to randomly select 15% of the labled comments and mannually check if they are lablled correctly or incorrectly. Hence, we may use the following code to pick 15 random comments (since our sample size is 100) and check the correctness of AI lableing.
 
 ---
+# 📊 Data Visualization
+Now that we have the correct data collected, lets take a look at how often each tag appears in negative vs non-negative reviews. We may present this comparison witha a bar chart which has tag frequency in Not Recommended vs Others
+
+**Code:**
+```python
+from collections import Counter
+import matplotlib.pyplot as plt
+from tag_utils import extract_all_tags_from_csv
+
+csv_path = "data/utf_final_result.csv"
+all_tags = extract_all_tags_from_csv(csv_path)
+
+tag_counts = Counter(all_tags)
+
+top_n = 20   # Select top N tags here
+most_common = tag_counts.most_common(top_n) 
+tags, counts = zip(*most_common)
+
+# Plot vertical bar chart
+plt.figure(figsize=(12, 6))
+plt.bar(tags, counts, color="#64a8ec")
+plt.xlabel("Tag")
+plt.ylabel("Frequency")
+plt.title(f"Top {top_n} Tags in Reviews")
+plt.xticks(rotation=45, ha="right")
+plt.tight_layout()
+plt.show()
+```
+---
 # 🔎 Figuring Key Qualities
 Now that we finally have each review converted into structured tags, it's time to investigate which factors most strongly reduces the likelihood that a player recommends the game.
 
