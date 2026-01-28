@@ -288,7 +288,6 @@ Now that we have the correct data collected, lets take a look at how often each 
 **Code:**
 ```python
 import pandas as pd
-import json
 import ast
 from collections import Counter
 import matplotlib.pyplot as plt
