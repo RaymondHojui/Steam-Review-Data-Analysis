@@ -233,6 +233,7 @@ import ast
 
 df = pd.read_csv("data/utf_final_result.csv")
 
+# Normalize the tags here
 label_mapping = {
     "multiplayer experience": "multiplayer",
     "multiplayer mode": "multiplayer",
@@ -273,7 +274,7 @@ for cell in df["llm_labels"]:
     for t in tag_list:
         all_tags.append(normalize_tag(t))
 ```
-A limitation of this strategy is that, in extrme cases, some synonyms may be missed. For example, we might classify “user interface,” “UI,” “UI design,” “visual design” .etc under the tag "UI", but missed the tage “interface,” which should also classified as UI. That said, this is likely negligible because most synonyms are correctly captured, and only a small number are missed, so the overall results are largely unaffected.
+A limitation of this strategy is that, in extrme cases, some synonyms may be missed. For example, we might classify “user interface,” “UI,” “UI design,” “visual design” .etc under the tag "UI", but missed the tag “interface,” which should also classified as UI. That said, this is likely negligible because most synonyms are correctly captured, and only a small number are missed, so the overall results are largely unaffected.
 
 **Problem 2:**
 Although most labels generated are accurate, there may still be instances of inaccurate or low-quality labeling. This can occur because the LLM may have difficulty recognizing sarcasm or indirect comments. For example, a comment such as "I love how the enemies know where I am before I spawn" is referring to unfair detection, but the LLM might incorrectly label it as "Smart AI"
