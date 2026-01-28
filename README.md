@@ -283,32 +283,74 @@ To invsetigate in the accuracy of LLM label, we can use simple random sampling t
 
 ---
 # 📊 Data Visualization
-Now that we have the correct data collected, lets take a look at how often each tag appears in negative vs non-negative reviews. We may present this comparison witha a bar chart which has tag frequency in Not Recommended vs Others
+Now that we have the correct data collected, lets take a look at how often each tag appears in negative reviews. We may present this comparison witha a bar chart which has tag frequency in Not Recommended
 
 **Code:**
 ```python
+import pandas as pd
+import json
+import ast
 from collections import Counter
 import matplotlib.pyplot as plt
-from tag_utils import extract_all_tags_from_csv
 
-csv_path = "data/utf_final_result.csv"
-all_tags = extract_all_tags_from_csv(csv_path)
+csv_path = r"C:\Users\bianh\OneDrive\Desktop\test\utf_final_result.csv"
 
-tag_counts = Counter(all_tags)
+df = pd.read_csv(csv_path)
 
-top_n = 20   # Select top N tags here
-most_common = tag_counts.most_common(top_n) 
-tags, counts = zip(*most_common)
+recommend_col = df["recommend"]
+recommend_col = recommend_col.astype(str)
+recommend_col = recommend_col.str.strip()
 
-# Plot vertical bar chart
+is_negative = recommend_col == "Not Recommended"
+
+
+neg_df = df[is_negative]
+
+def parse_labels_cell(cell): 
+    text = str(cell).strip()
+    if text == "":
+        return []
+    labels = ast.literal_eval(text)
+    if type(labels) == list:
+        return labels
+    else:
+        return []
+
+all_neg_tags = []
+
+col = neg_df["llm_labels"]
+for cell in col:
+    labels_list = parse_labels_cell(cell)
+    for tag in labels_list:
+        all_neg_tags.append(tag)
+
+cleaned_tags = []
+for tag in all_neg_tags:
+    if type(tag) == str:
+        t = tag.strip().lower()
+        if t != "":
+            cleaned_tags.append(t)
+
+tag_counts = Counter(cleaned_tags)
+
+top_n = 20
+most_common = tag_counts.most_common(top_n)
+
+tags = []
+counts = []
+for tag, count in most_common:
+    tags.append(tag)
+    counts.append(count)
+
 plt.figure(figsize=(12, 6))
-plt.bar(tags, counts, color="#64a8ec")
+plt.bar(tags, counts)
 plt.xlabel("Tag")
 plt.ylabel("Frequency")
-plt.title(f"Top {top_n} Tags in Reviews")
+plt.title("Top 20 Tags in Negative (Not Recommended) Reviews")
 plt.xticks(rotation=45, ha="right")
 plt.tight_layout()
 plt.show()
+
 ```
 ---
 # 🔎 Figuring Key Qualities
