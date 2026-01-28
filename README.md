@@ -179,8 +179,8 @@ from ollama import chat, ChatResponse
 import time
 import re
 
-# Read your comment data
-df = pd.read_csv("cleaned_reviews_testing.csv")
+csv_path = r"data/utf_final_result.csv"
+df = pd.read_csv(csv_path)
 labels = []
 
 total = len(df["review"])
@@ -231,7 +231,8 @@ Different labels are being generated for the same concept (e.g., “user interfa
 import pandas as pd
 import ast
 
-df = pd.read_csv("data/utf_final_result.csv")
+csv_path = r"data/utf_final_result.csv"
+df = pd.read_csv(csv_path)
 
 # Normalize the tags here
 label_mapping = {
@@ -292,8 +293,7 @@ import ast
 from collections import Counter
 import matplotlib.pyplot as plt
 
-csv_path = r"C:\Users\bianh\OneDrive\Desktop\test\utf_final_result.csv"
-
+csv_path = r"data/utf_final_result.csv"
 df = pd.read_csv(csv_path)
 
 recommend_col = df["recommend"]
