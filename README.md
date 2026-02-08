@@ -284,7 +284,7 @@ To invsetigate in the accuracy of LLM label, we can use simple random sampling t
 
 ---
 # 📊 Data Visualization
-Now that we have the correct data collected, lets take a look at how often each tag appears in negative reviews. We may present this comparison witha a bar chart which has tag frequency in Not Recommended
+Now that we have the cleaned all the data, we have enough information to take a look at how often each tag appears in negative reviews. We can present this with a simple bar chart that display the frequency of each tag in `Not Recommed`.
 
 **Code:**
 ```python
