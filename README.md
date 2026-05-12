@@ -1,19 +1,19 @@
-# Predicting Recommend-Rate Lift from LLM-Tagged Steam Reviews
+# Identifying Positive and Negative Review Drivers from LLM-Tagged Steam Reviews
 **Project Goal** 
 
-Use player feedback data to identify the game qualities that most negatively influence recommendations and build a model that predicts how addressing these issues will increase the game's recommend rate.
+Use player feedback data to identify the game qualities most associated with positive and negative recommendations by comparing recommend rates across LLM-generated review tags.
 
 **Summary**
 
-This project simulates a real-world data analysis workflow in the gaming industry. Using AI-powered large language model (LLM) tagging and statistical modeling, the project explores how user feedback relates to recommendation behavior, offering insight that can guide future game design decisions.
+This project simulates a real-world data analysis workflow in the gaming industry. Using AI-powered large language model (LLM) tagging and binomial rate analysis, the project explores how user feedback themes relate to Steam recommendation behavior. The analysis identifies tags with the highest `Recommended` rates and tags with the highest `Not Recommended` rates, offering insight into possible pain points and strengths in the game experience.
 
 **Objectives**
 
 - Extract real user reviews from Steam via web scraping  
 - Clean and preprocess unstructured review text  
 - Use a local LLM to auto-tag sentiment and themes  
-- Explore probabilistic modeling (e.g., binomial regression) on user feedback  
-- Identify pain points and improvement opportunities for game design
+- Use binomial rate analysis to compare `Recommended` and `Not Recommended` outcomes across review tags 
+- Identify review themes most associated with negative and positive recommendation outcomes
 
 **Software and Tools:**
 
@@ -354,55 +354,110 @@ plt.show()
 ---
 # 🔎 Figuring Key Qualities
 
-We will perform a Logistic (Binomial) Regression for this project.
+We will perform a Binomial Logistic Regression for this project.
 
-Why Logistic (Binomial) Regression: Player recommendations on Steam are inherently binary: `Recommended` or `Not Recommended`. This makes **logistic regression** a great modeling choice. (Logistic regression can estimate the probability that a review is `Not Recommended` based on the presence of specific issue tags)
+Why Binomial Logistic regression: Player recommendations on Steam are inherently binary: `Recommended` or `Not Recommended`. This makes **logistic regression** is a great modeling choice. (Logistic regression can estimate the probability that a review is `Not Recommended` based on the presence of specific issue tags)
 
-**Step 1 — Convert tags into model features**
-Now we have some insights anout the frequency of each tag, we may start forming our Logistic (Binomial) Regression model.
-
-Each review becomes a row of binary features:
-
-If a review contains tag `crash` → crash = 1, otherwise 0
-
-Same for "bug", "performance", "ui", "matchmaking", etc.
-
-Target (what we predict):
-
-Not Recommended = 1
-
-Recommended = 0
+Specifically, we will compare binomial `recommend` and `not-recommend` rates within each tag group, then separating top negative and top positive tags.
 
 **Code:**
 ```python
+import pandas as pd
+import ast
+import re
+
+df = pd.read_csv("utf_final_result.csv")
+
+df = df[df["recommend"].isin(["Recommended", "Not Recommended"])].copy()
+
+def parse_labels(cell):
+    try:
+        labels = ast.literal_eval(str(cell))
+        if isinstance(labels, list):
+            return [
+                re.sub(r"\s+", " ", str(label).strip().lower())
+                for label in labels
+                if str(label).strip()
+            ]
+        return []
+    except:
+        return []
+
+df["parsed_labels"] = df["llm_labels"].apply(parse_labels)
+
+tag_rows = df.explode("parsed_labels").rename(columns={"parsed_labels": "tag"})
+
+tag_summary = (tag_rows.groupby(["tag", "recommend"]).size().unstack(fill_value=0).reset_index())
+
+tag_summary.columns.name = None
+
+tag_summary["total_reviews_with_tag"] = (tag_summary["Recommended"] + tag_summary["Not Recommended"])
+
+tag_summary["recommended_rate"] = (tag_summary["Recommended"] / tag_summary["total_reviews_with_tag"])
+
+tag_summary["not_recommended_rate"] = (tag_summary["Not Recommended"] / tag_summary["total_reviews_with_tag"])
+
+min_count = 5
+tag_summary = tag_summary[tag_summary["total_reviews_with_tag"] >= min_count].copy()
+
+
+top_negative = tag_summary.sort_values(by="not_recommended_rate", ascending=False).head(3)
+
+
+top_positive = tag_summary.sort_values(by="recommended_rate", ascending=False).head(3)
+
+top_negative["not_recommended_rate"] = top_negative["not_recommended_rate"].apply(lambda x: f"{x:.1%}")
+top_positive["recommended_rate"] = top_positive["recommended_rate"].apply(lambda x: f"{x:.1%}")
+
+print("Top 3 Negative Tags")
+print(top_negative[[
+    "tag",
+    "total_reviews_with_tag",
+    "Recommended",
+    "Not Recommended",
+    "not_recommended_rate"
+]])
+
+print("\nTop 3 Positive Tags")
+print(top_positive[[
+    "tag",
+    "total_reviews_with_tag",
+    "Recommended",
+    "Not Recommended",
+    "recommended_rate"
+]])
 ```
+After running the code, it will output two ranked tables:
 
-**Step 2 — Logistic regression (interpretable model)**
+1. Top 3 Negative Tags — tags with the highest `Not Recommended` rate
+2. Top 3 Positive Tags — tags with the highest `Recommended` rate
 
-We fit a logistic regression using the tag features to estimate:
+Each row represents a tag, not an individual review. For each tag, the code counts how many reviews containing that tag were `Recommended` or `Not Recommended`, then calculates the corresponding rate.
 
-Which tags are most associated with Not Recommended
+### Top 3 Negative Tags
 
-How strong each tag’s influence is (via odds ratios)
+| tag | total_reviews_with_tag | Recommended | Not Recommended | not_recommended_rate |
+| --- | ---------------------: | ----------: | --------------: | -------------------: |
+| complaints | 12 | 1 | 11 | 91.7% |
+| suggestions | 7 | 1 | 6 | 85.7% |
+| monetization | 20 | 4 | 16 | 80.0% |
 
-Deliverable:
+For these tags, we treat `Not Recommended` as the binomial “success.”
 
-Ranked table of top negative drivers like:
+Example: `X_complaints ~ Binomial(n = 12, p = 0.917)`
 
-**Step 3 — “What if we fix X?” simulation (optional but very strong)**
+This means that among reviews tagged with `complaints`, 11 out of 12 were `Not Recommended`.
 
-Once we have a model, we can simulate improvement:
+### Top 3 Positive Tags
 
-Remove an issue tag (e.g., crash=0)
+| tag | total_reviews_with_tag | Recommended | Not Recommended | recommended_rate |
+| --- | ---------------------: | ----------: | --------------: | ---------------: |
+| difficulty | 11 | 8 | 3 | 72.7% |
+| balance | 5 | 3 | 2 | 60.0% |
+| online | 6 | 3 | 3 | 50.0% |
 
-Recompute predicted negative rate
+For these tags, we treat `Recommended` as the binomial “success.”
 
-Estimate recommend-rate improvement
+Example: `X_difficulty ~ Binomial(n = 11, p = 0.727)`
 
-Deliverable:
-
-A small “impact estimate” table:
-
-Fix	predicted Not Recommended ↓
-Fix crashes	-8%
-Improve performance	-5%
+This means that among reviews tagged with `difficulty`, 8 out of 11 were `Recommended`.
