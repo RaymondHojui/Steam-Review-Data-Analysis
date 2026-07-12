@@ -54,7 +54,7 @@ We collect data based on top-rated reviews for an initial signal on what delight
 
 <br>
 
-> **Source Code**
+> **Implementation**
 > [`View the full Python script →`](src/scrape_clean.py)
 > Scrapes Steam reviews, extracts review metadata, cleans the review text, and exports the raw and processed datasets.
 > 
@@ -89,7 +89,7 @@ This project runs the `deepseek-r1:14b` LLM locally using the open-source tool `
 
 Tagging unstructured review text into analyzable categories makes it possible for us to quantify recurring themes in player feedback. To do this at scale and with quick turnaround, we automate the tagging with an AI LLM since manual tagging is time consuming and costly in real world senarios. Running this model locally preserves data privacy where no content is sent to third-party services.
 
-> **Source Code**
+> **Implementation**
 >
 > [`View the full Python script →`](src/auto_tagging.py)
 > Uses a locally hosted language model through Ollama to generate topic labels for each Steam review.
@@ -115,7 +115,7 @@ There are 2 major issues with the leabels at this stage:
 **Problem 1:**
 Different labels are being generated for the same concept (e.g., “user interface” and “UI”). This occurs because the LLM reviews are stateless and don’t remember previous tag decisions. However, there is a recognizable pattern for the tags. Tags are generally 1-2 word long, and similar words will keep repeating. A simple fix is to normalize synonyms to a single canonical tag.
 
-> **Source Code**
+> **Implementation**
 >
 > [`View the full Python script →`](src/normalize.py)  
 > Maps synonymous LLM-generated labels to a consistent set of canonical tags.
@@ -145,7 +145,7 @@ Why Binomial Logistic regression: Player recommendations on Steam are inherently
 
 Specifically, we will compare binomial `recommend` and `not-recommend` rates within each tag group, then separating top negative and top positive tags.
 
-> **Source Code**
+> **Implementation**
 >
 > [`View the full Python script →`](src/key_qualities.py)  
 > Compares recommendation rates across review tags to identify potential positive and negative review drivers.
