@@ -37,7 +37,7 @@ This project simulates a real-world data analysis workflow in the gaming industr
 - **Final Data**  
   Source: Cleaned Data with additional sentiment/theme labels.  
   Fields: `user_name`, `recommend`, `hours`, `date`, `review`, `llm_labels`  
-  Purpose: Purpose: This is the final dataset used for statistical modeling. It contains both the cleaned reviews and AI-generated sentiment/theme labels (via a large language model, LLM).
+  Purpose: Purpose: This is the final dataset used for tag-level recommendation-rate analysis. It contains both the cleaned reviews and AI-generated sentiment/theme labels (via a large language model, LLM).
 
 ---
 ## 🕷️Steam Review Scraper & Cleaning Pipeline
@@ -137,13 +137,13 @@ Now that we have the cleaned all the data, we have enough information to take a 
 > Counts recurring themes in negative reviews and visualizes their frequencies.
 
 ---
-# 🔎 Figuring Key Qualities
+# 🔎 Identifying Positive and Negative Review Drivers
+To identify factors influencing whether reviews are recommended, we compare the `Recommended` and `Not Recommended` rates among reviews containing each LLM-generated tag.
 
-We will perform a Binomial Logistic Regression for this project.
+For every tag, the analysis counts the number of positive and negative recommendations, calculates the corresponding rates, and ranks the tags
+with the strongest positive and negative associations.
 
-Why Binomial Logistic regression: Player recommendations on Steam are inherently binary: `Recommended` or `Not Recommended`. This makes **logistic regression** is a great modeling choice. (Logistic regression can estimate the probability that a review is `Not Recommended` based on the presence of specific issue tags)
-
-Specifically, we will compare binomial `recommend` and `not-recommend` rates within each tag group, then separating top negative and top positive tags.
+Because this is a descriptive tag-level rate analysis, the results show associations rather than proving that a specific game quality caused a player's recommendation.
 
 > **Implementation**
 >
