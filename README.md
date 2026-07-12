@@ -184,3 +184,19 @@ For these tags, we treat `Recommended` as the binomial “success.”
 Example: `X_difficulty ~ Binomial(n = 11, p = 0.727)`
 
 This means that among reviews tagged with `difficulty`, 8 out of 11 were `Recommended`.
+
+---
+## ⚖️ License and Attribution
+
+Copyright © 2026 Raymond Ho-Jui.
+
+This project is licensed under the
+[GNU Affero General Public License v3.0](LICENSE).
+
+You may use, modify, and build upon this project under the terms of the
+license. Redistributions must preserve the applicable copyright and license
+notices, and modified versions must identify that changes were made.
+
+If this project or part of its code contributes to your work, please credit:
+
+> Built using code from **Steam Review Data Analysis** by **Raymond Ho-Jui**.
