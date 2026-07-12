@@ -1,3 +1,9 @@
+# Copyright (C) 2026 Raymond Ho-Jui
+#
+# This file is part of Steam Review Data Analysis.
+# Licensed under the GNU Affero General Public License v3.0.
+# See the LICENSE file in the repository root.
+
 import pandas as pd
 from ollama import chat, ChatResponse
 import time
