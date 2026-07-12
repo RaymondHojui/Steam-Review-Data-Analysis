@@ -1,0 +1,10 @@
+cff-version: 1.2.0
+message: "If you use or build upon this software, please cite it as below."
+title: "Steam Review Data Analysis"
+type: software
+authors:
+  - given-names: "Raymond"
+    family-names: "Ho-Jui"
+repository-code: "https://github.com/RaymondHojui/Steam-Review-Data-Analysis"
+url: "https://github.com/RaymondHojui/Steam-Review-Data-Analysis"
+license: "AGPL-3.0-only"
