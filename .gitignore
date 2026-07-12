@@ -1,0 +1,20 @@
+# Python cache files
+__pycache__/
+*.py[cod]
+
+# Virtual environments
+.venv/
+venv/
+
+# Environment variables and secrets
+.env
+
+# Generated datasets
+raw_reviews.csv
+reviews_cleaned.csv
+reviews_with_llm_labels.csv
+utf_final_result.csv
+
+# Operating-system files
+.DS_Store
+Thumbs.db
